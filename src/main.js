@@ -8,21 +8,8 @@ const searchForm = document.querySelector('.form');
 const gallery = document.querySelector('.gallery');
 const loading = document.querySelector('.loading');
 
-const cardTemplate = cardInfo => {
-    return ` <li class="photo-card">
-        <a href="${cardInfo.largeImageURL}">
-            <img src="${cardInfo.webformatURL}" alt="${cardInfo.tags}" />
-        </a>
-        <div class="info">
-            <p>Likes: <span>${cardInfo.likes}</span></p>
-            <p>Views: <span>${cardInfo.views}</span></p>
-            <p>Comments: <span>${cardInfo.comments}</span></p>
-            <p>Downloads: <span>${cardInfo.downloads}</span></p>
-        </div>
-    </li>`
-};
-
-
+import { cardTemplate } from './js/render-functions';
+import { fetchPhotos } from './js/pixabay-api';
 
 const searchFormSubmit = event => {
     event.preventDefault();
@@ -48,24 +35,7 @@ const searchFormSubmit = event => {
 
     loading.style.display = 'block';
 
-
-    const params = new URLSearchParams({
-        key: '48576644-2047f7a262d439c7b8152f8c6',
-        q: `${searchedQuery}`,
-        image_type: 'photo',
-        orientation: 'horizontal',
-        safesearch: 'true',
-    });
-
-
-    fetch(`https://pixabay.com/api/?${params}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(response.status);
-            }
-
-            return response.json();
-        })
+     fetchPhotos(searchedQuery)
         .then(data => {
             
 
